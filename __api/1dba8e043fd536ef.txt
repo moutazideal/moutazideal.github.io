@@ -1,1 +1,0 @@
-{"message":{"preview_image":"https://images.pexels.com/photos/1647976/pexels-photo-1647976.jpeg","preview_title":"Smartphone","name":"SKU004","Item Group":"Demo Item Group","Description":"<div class='ql-snow'>Smartphone</div>"}}

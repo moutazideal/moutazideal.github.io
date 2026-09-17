@@ -1,1 +1,0 @@
-{"message":[{"name":"Shareholder"},{"name":"Employee"},{"name":"Supplier"}]}

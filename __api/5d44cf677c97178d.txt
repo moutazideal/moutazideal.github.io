@@ -1,1 +1,0 @@
-{"message":{"preview_image":"https://images.pexels.com/photos/585753/pexels-photo-585753.jpeg","preview_title":"Coffee Mug","name":"SKU006","Item Group":"Demo Item Group","Description":"<div class='ql-snow'>Coffee Mug</div>"}}

@@ -1,1 +1,0 @@
-{"message":{"preview_image":"https://images.pexels.com/photos/3587478/pexels-photo-3587478.jpeg","preview_title":"Headphones","name":"SKU009","Item Group":"Demo Item Group","Description":"<div class='ql-snow'>Headphones</div>"}}
