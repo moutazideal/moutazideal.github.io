@@ -1,0 +1,12 @@
+# The developer's global gitignore (~/.config/git/ignore) excludes *.png, *.mp3
+# and friends to keep binaries out of snapshots. This site genuinely needs its
+# icons and the desk's UI sounds, so re-include them here: a .gitignore inside
+# the repository takes precedence over the global excludes file.
+!*.png
+!*.jpg
+!*.jpeg
+!*.webp
+!*.ico
+!*.mp3
+!*.woff
+!*.woff2
