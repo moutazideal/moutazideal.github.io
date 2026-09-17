@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64"
+     role="img" aria-label="ERP-FIC">
+  <defs>
+    <linearGradient id="ficf" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b7de9"/>
+      <stop offset="1" stop-color="#0b3d91"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="url(#ficf)"/>
+  <text x="32" y="42" text-anchor="middle"
+        font-family="Segoe UI,Roboto,Helvetica,Arial,sans-serif"
+        font-size="26" font-weight="700" fill="#ffffff" letter-spacing="0.5">FIC</text>
+</svg>

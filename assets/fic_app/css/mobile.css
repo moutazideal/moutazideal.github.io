@@ -1,0 +1,174 @@
+/* ===========================================================================
+ * fic_app — mobile usability layer
+ *
+ * Frappe v15's desk is desktop-first: its top-bar controls are 16–28px, the
+ * page title is capped at ~98px, and its viewport tag disables pinch-zoom.
+ * This file corrects what can be corrected from the outside, at the same
+ * 767px breakpoint Frappe itself uses (@media (max-width: 767px)).
+ *
+ * Nothing here touches upstream files — it is loaded via app_include_css.
+ * =========================================================================== */
+
+@media (max-width: 767px) {
+
+	/* --- 1) taller top bar ------------------------------------------------
+	 * Frappe derives every layout offset from this variable, so raising it
+	 * keeps its own calc()s consistent instead of breaking them. */
+	:root {
+		--navbar-height: 56px;
+	}
+
+	/* --- 2) every top-bar control becomes a 44x44 touch target ----------- */
+	.navbar .navbar-brand.navbar-home,
+	.navbar .btn-reset,
+	.navbar .nav-link,
+	.navbar .notifications-icon,
+	.navbar .avatar,
+	.sidebar-toggle-btn {
+		min-width: 44px;
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* dropdown rows: full width and tall, they are the main mobile menu */
+	.navbar .dropdown-item,
+	.navbar .btn-reset.dropdown-item {
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+		width: 100%;
+	}
+
+	/* --- 3) the awesome bar / search -------------------------------------- */
+	.navbar #navbar-search,
+	.navbar .search-bar,
+	.navbar input.form-control {
+		min-height: 44px;
+		font-size: 16px; /* iOS never auto-zooms inputs at >= 16px */
+	}
+
+	/* --- 4) the page title was capped at ~97px and ellipsised -------------
+	 * Give it the real available width; the ellipsis stays for long titles. */
+	.title-area,
+	.title-area .title-text,
+	.title-text.ellipsis {
+		max-width: 100% !important;
+	}
+
+	/* --- 5) comfortable reading and tappable controls in the body --------- */
+	.page-body,
+	.layout-main-section,
+	.workspace-body {
+		font-size: 15px;
+	}
+
+	.page-body .form-control,
+	.modal .form-control,
+	.page-body .btn,
+	.modal .btn,
+	.page-body .input-with-feedback {
+		min-height: 44px;
+		font-size: 16px;
+	}
+
+	/* --- 6) list rows stay reachable ------------------------------------- */
+	.list-row .level-left,
+	.list-row .level-right {
+		min-height: 44px;
+	}
+
+	/* --- 7) our own corner switcher: 44x44 on touch ---------------------- */
+	.fic-qs {
+		left: 12px;
+		bottom: 12px;
+		padding: 6px;
+		gap: 6px;
+	}
+
+	.fic-qs-btn {
+		width: 44px;
+		height: 44px;
+		font-size: 15px;
+	}
+
+	.fic-qs-btn svg {
+		width: 20px;
+		height: 20px;
+	}
+
+	/* Reserve space under the scroll area so the fixed corner switcher never
+	 * hides the last row of a list. The widget is ~112x56px at bottom-left;
+	 * without this the final record sits underneath it. */
+	.content.page-container,
+	.layout-main-section {
+		padding-bottom: 72px;
+	}
+
+	/* --- 8) the off-canvas sidebar IS the mobile navigation ---------------
+	 * It is hidden until the toggle is tapped, then it becomes the primary
+	 * menu — its rows must be tappable, not 18–28px. */
+	.desk-sidebar .item-anchor,
+	.desk-sidebar .sidebar-item-container,
+	.desk-sidebar .standard-sidebar-item,
+	.desk-sidebar .standard-sidebar-label {
+		min-height: 44px;
+		display: flex;
+		align-items: center;
+	}
+
+	/* NOTE: deliberately NO width override on .desk-sidebar.
+	 * Frappe already applies `width: 60%` at this breakpoint, which keeps the
+	 * CLOSED sidebar fully off-canvas. Widening it pushes it back over the
+	 * content area — and since the off-canvas sidebar still receives pointer
+	 * events, it then swallows taps aimed at the workspace shortcuts.
+	 * Measured at 390px:  width 320px -> overlaps content, shortcut label taps
+	 * blocked;  Frappe's 60% (~204px) -> no overlap, taps work. */
+
+	/* --- 9) workspace link widgets are real navigation on mobile ---------- */
+	.links-widget-box .link-item,
+	.widget-body .link-item,
+	a.link-item.ellipsis {
+		min-height: 44px;
+		align-items: center;
+		padding-top: 8px;
+		padding-bottom: 8px;
+	}
+
+	/* collapsible section chevrons */
+	.sidebar-item-control .drop-icon,
+	.btn-reset.drop-icon {
+		min-width: 44px;
+		min-height: 44px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	/* footer action buttons */
+	.workspace-footer .btn {
+		min-width: 44px;
+	}
+
+	/* --- 10) kill the link-preview popover on phones ---------------------- *
+	 * frappe.ui.LinkPreview listens for `mouseover`, and a touch screen
+	 * synthesises that event on tap. So tapping any document link built a
+	 * popover that (a) landed off-screen to the left in RTL and (b) added
+	 * ~1200px of horizontal overflow, sliding the whole page sideways.
+	 * There is no hover on a phone, so the popover has no purpose here.
+	 * mobile.js also empties frappe.boot.link_preview_doctypes to stop the
+	 * desk from building it at all; this rule is the guarantee. */
+	.link-preview-popover,
+	.control-field-popover {
+		display: none !important;
+	}
+}
+
+/* Touch devices of any width (tablets in landscape, for example) */
+@media (pointer: coarse) {
+	.fic-qs-btn {
+		width: 44px;
+		height: 44px;
+	}
+}

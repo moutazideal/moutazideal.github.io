@@ -1,0 +1,1 @@
+{"message":{"result":[],"columns":[],"message":null,"chart":[],"report_summary":null,"skip_total_row":0,"status":null,"execution_time":0.00745,"add_total_row":true}}

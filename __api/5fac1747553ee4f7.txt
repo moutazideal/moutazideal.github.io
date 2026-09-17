@@ -1,0 +1,1 @@
+{"message":{"preview_image":"https://images.pexels.com/photos/1484808/pexels-photo-1484808.jpeg","preview_title":"T-shirt","name":"SKU001","Item Group":"Demo Item Group","Description":"<div class='ql-snow'>T-shirt</div>"}}

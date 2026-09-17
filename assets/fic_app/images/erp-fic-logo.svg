@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 148 34" width="148" height="34"
+     role="img" aria-label="ERP-FIC">
+  <!-- Self-contained badge: readable on both light and dark navbars -->
+  <defs>
+    <linearGradient id="ficg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b7de9"/>
+      <stop offset="1" stop-color="#0b3d91"/>
+    </linearGradient>
+  </defs>
+  <rect x="0.5" y="0.5" width="147" height="33" rx="9" fill="url(#ficg)"/>
+  <rect x="0.5" y="0.5" width="147" height="33" rx="9" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>
+  <circle cx="17" cy="17" r="7.2" fill="#ffffff" fill-opacity="0.16"/>
+  <text x="17" y="21.4" text-anchor="middle"
+        font-family="Segoe UI,Roboto,Helvetica,Arial,sans-serif"
+        font-size="10.5" font-weight="700" fill="#ffffff">F</text>
+  <text x="31" y="22.2"
+        font-family="Segoe UI,Roboto,Helvetica,Arial,sans-serif"
+        font-size="15" font-weight="700" fill="#ffffff" letter-spacing="0.6">ERP-FIC</text>
+</svg>

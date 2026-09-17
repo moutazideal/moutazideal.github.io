@@ -1,0 +1,1 @@
+{"message":{"preview_image":"https://images.pexels.com/photos/3731256/pexels-photo-3731256.jpeg","preview_title":"Backpack","name":"SKU008","Item Group":"Demo Item Group","Description":"<div class='ql-snow'>Backpack</div>"}}

@@ -1,0 +1,96 @@
+/* fic_app — corner quick switcher styling.
+ * Uses Frappe's CSS variables where available, with explicit fallbacks so the
+ * widget also looks right in dark mode. Pinned to the PHYSICAL bottom-left
+ * corner on purpose: Frappe owns the bottom-right one for its toasts. */
+
+.fic-qs {
+	position: fixed;
+	/* Physical LEFT corner on purpose: Frappe pins its toast container to the
+	   physical bottom-right (`#alert-container { bottom: 0; right: 20px;
+	   z-index: 1050 }`), so a logical inline-end corner gets covered by toasts
+	   in LTR. The left corner is free of Frappe chrome in both directions. */
+	left: 18px;
+	bottom: 18px;
+	z-index: 1030;
+	display: flex;
+	gap: 4px;
+	padding: 4px;
+	border-radius: 999px;
+	background: var(--fg-color, #ffffff);
+	border: 1px solid var(--border-color, #d1d8dd);
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+	opacity: 0.72;
+	transition: opacity 0.15s ease;
+}
+
+.fic-qs:hover,
+.fic-qs:focus-within {
+	opacity: 1;
+}
+
+.fic-qs-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	padding: 0;
+	border: 0;
+	border-radius: 999px;
+	cursor: pointer;
+	background: transparent;
+	color: var(--text-color, #1f272e);
+	font-size: 12px;
+	font-weight: 600;
+	line-height: 1;
+	transition: background-color 0.15s ease;
+}
+
+.fic-qs-btn:hover {
+	background: var(--bg-color, #f4f5f6);
+}
+
+.fic-qs-btn:focus-visible {
+	outline: 2px solid var(--primary, #2490ef);
+	outline-offset: 1px;
+}
+
+.fic-qs-btn svg {
+	display: block;
+}
+
+.fic-qs-btn--lang {
+	font-family: inherit;
+	letter-spacing: 0.02em;
+}
+
+.fic-qs-busy {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+/* Dark theme */
+[data-theme="dark"] .fic-qs {
+	background: #1f272e;
+	border-color: #363c44;
+	box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="dark"] .fic-qs-btn {
+	color: #e7eaec;
+}
+
+[data-theme="dark"] .fic-qs-btn:hover {
+	background: #2c343c;
+}
+
+/* Never cover Frappe's own dialogs */
+.modal-open .fic-qs {
+	z-index: 100;
+}
+
+@media print {
+	.fic-qs {
+		display: none;
+	}
+}

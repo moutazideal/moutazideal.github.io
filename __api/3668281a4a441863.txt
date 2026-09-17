@@ -1,0 +1,1 @@
+{"message":{"preview_image":"https://images.pexels.com/photos/3999538/pexels-photo-3999538.jpeg","preview_title":"Laptop","name":"SKU002","Item Group":"Demo Item Group","Description":"<div class='ql-snow'>Laptop</div>"}}
