@@ -54,7 +54,41 @@
   .popover:has(.link-description),
   .popover:has(.card-description) { display: none !important; }
 }
+#__erpfic_splash{position:fixed;top:0;right:0;bottom:0;left:0;z-index:2147483000;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  background:#fff;visibility:visible;direction:rtl;
+  font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}
+#__erpfic_splash .__lg{width:92px;height:92px;border-radius:24px;
+  background:linear-gradient(135deg,#2b7de9,#0b3d91);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700;
+  box-shadow:0 10px 28px rgba(11,61,145,.28)}
+#__erpfic_splash .__t{font-size:20px;font-weight:700;color:#111827;letter-spacing:.5px}
+#__erpfic_splash .__sp{width:32px;height:32px;border:3px solid #e5e7eb;border-top-color:#2b7de9;
+  border-radius:50%;animation:__erpfic_spin .9s linear infinite}
+@keyframes __erpfic_spin{to{transform:rotate(360deg)}}
+#__erpfic_splash .__m{font-size:14px;color:#6b7280;text-align:center;
+  padding:0 28px;line-height:1.9;max-width:420px}
 </style>
+<script>
+/* Hide the desk until the body script knows the app can actually render.
+ *
+ * Two very different hosts serve this build:
+ *   - a replay server (server.js), which answers /api/* from the recording, so
+ *     the page is usable on the very first, not-yet-controlled load;
+ *   - a plain static host (GitHub Pages), which has no /api/* at all, so on the
+ *     first load the desk would paint an empty shell of skeletons and only work
+ *     after the service worker takes over.
+ * The body script probes for that and reveals the page (or installs the worker
+ * first). Hiding happens here, before first paint, to avoid a flash of the
+ * broken shell. */
+(function () {
+  window.__erpficNeedSW = ('serviceWorker' in navigator) &&
+    (location.protocol === 'https:' || location.hostname === 'localhost' ||
+     location.hostname === '127.0.0.1');
+  if (!window.__erpficNeedSW) return;
+  document.documentElement.style.visibility = 'hidden';
+})();
+</script>
 </head>
 	<body>
 		<div class="centered splash">
@@ -27194,23 +27228,92 @@
     }, ms || 7000);
   }
 
-  /* The app is fully usable right now: the host replays the recorded API. The
-   * worker is only building the OFFLINE copy in the background, so it must never
-   * block or hide the page. When activation lands, the offline copy is complete
-   * (precaching happens in the install event). */
-  var started = !!navigator.serviceWorker.controller;
-  navigator.serviceWorker.addEventListener('controllerchange', function () {
-    if (!started) started = true;
-  });
+  var shown = false, valve;
+  function show() {
+    if (shown) return;
+    shown = true;
+    clearTimeout(valve);
+    document.documentElement.style.visibility = '';
+    var el = document.getElementById('__erpfic_splash');
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }
 
-  navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function (reg) {
-    if (navigator.serviceWorker.controller) return;   // already offline-capable
-    return navigator.serviceWorker.ready.then(function () {
-      if (!navigator.serviceWorker.controller) return;
-      toast('<span class="__ok">&#10003;</span>' +
-            '<span>تم تجهيز التطبيق للعمل بدون إنترنت. يمكنك الآن إضافته إلى الشاشة الرئيسية.</span>', 9000);
+  function splash(msg) {
+    if (document.getElementById('__erpfic_splash')) return;
+    var d = document.createElement('div');
+    d.id = '__erpfic_splash';
+    d.innerHTML = '<div class="__lg">F</div><div class="__t">ERP-FIC</div>' +
+      '<div class="__sp"></div><div class="__m" id="__erpfic_splash_msg">' + msg + '</div>';
+    document.body.appendChild(d);
+  }
+
+  if (!('serviceWorker' in navigator)) { show(); return; }
+
+  function toast(html, ms) {
+    var d = document.createElement('div');
+    d.id = '__erpfic_toast';
+    d.innerHTML = html;
+    document.body.appendChild(d);
+    requestAnimationFrame(function () { d.className = '__on'; });
+    setTimeout(function () {
+      d.className = '';
+      setTimeout(function () { if (d.parentNode) d.parentNode.removeChild(d); }, 500);
+    }, ms || 7000);
+  }
+
+  function register() {
+    var started = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', function () { started = true; });
+    return navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function () {
+      if (navigator.serviceWorker.controller) return;   // already offline-capable
+      return navigator.serviceWorker.ready.then(function () {
+        if (!navigator.serviceWorker.controller) return;
+        if (shown) toast('<span class="__ok">&#10003;</span>' +
+          '<span>تم تجهيز التطبيق للعمل بدون إنترنت. يمكنك الآن إضافته إلى الشاشة الرئيسية.</span>', 9000);
+      });
+    }).catch(function (e) { console.warn('SW register failed', e); });
+  }
+
+  /* Which kind of host are we on?
+   *
+   * server.js answers /api/* from the recording, so the app renders on the very
+   * first load. GitHub Pages has no /api/* at all: the desk's first API call
+   * 404s, leaving an empty skeleton shell, and the app only works once the
+   * service worker controls the page.
+   *
+   * One probe tells the two apart. Note the probe stays correct after the worker
+   * takes over, because the worker itself answers /api/* -- which is exactly why
+   * the reloaded page then reveals normally. */
+  var probe = fetch('/api/method/ping', { method: 'GET' })
+    .then(function (r) { return r.ok; })
+    .catch(function () { return false; });
+
+  probe.then(function (hasReplay) {
+    if (hasReplay || navigator.serviceWorker.controller) { show(); register(); return; }
+
+    // static host, worker not in control yet: precache first, then reload into it
+    splash('جارٍ تجهيز التطبيق للعمل بدون إنترنت…<br>تحدث هذه الخطوة مرة واحدة فقط عند أول تشغيل.');
+    valve = setTimeout(show, 180000);
+
+    var reloaded = false;
+    function reloadOnce() {
+      if (reloaded) return;
+      reloaded = true;
+      var n = parseInt(sessionStorage.getItem('__erpfic_boots') || '0', 10);
+      if (n >= 3) { show(); return; }
+      sessionStorage.setItem('__erpfic_boots', String(n + 1));
+      location.reload();
+    }
+    navigator.serviceWorker.addEventListener('controllerchange', reloadOnce);
+    register().then(function () {
+      if (navigator.serviceWorker.controller) { reloadOnce(); return; }
+      var n = 0;
+      var iv = setInterval(function () {
+        if (navigator.serviceWorker.controller) { clearInterval(iv); reloadOnce(); }
+        else if (++n > 1800) { clearInterval(iv); show(); }
+      }, 100);
     });
-  }).catch(function (e) { console.warn('SW register failed', e); });
+  });
 })();
 </script>
 </body>
